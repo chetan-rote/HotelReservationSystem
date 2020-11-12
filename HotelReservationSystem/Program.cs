@@ -13,31 +13,33 @@ namespace HotelReservationSystem
 {
     class Program
     {
+        public static void FunctionForCustomerType(int type)
+        {
+            HotelReservation.FindCheapestHotel(type);
+            HotelReservation.FindCheapestBestRatedHotels(type);
+            HotelReservation.FindBestRatedHotel(type);
+        }
         /// <summary>
         /// Defines the entry point of the application.
         /// </summary>
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
+           
             Console.WriteLine("Hello Welcome to Hotel Reservation System\n");
-            /// UC1 
-            /// Adding the hotels name and rates.
-            HotelReservation.AddHotelRecords("Lakewood", 110, 90, 3);
-            HotelReservation.AddHotelRecords("Bridgewood", 150, 50, 4);
-            HotelReservation.AddHotelRecords("Ridgewood", 220, 150, 5);
-            /// Display the record in the hotel record dictionary.
+            HotelReservation.DefiningAdditionRepository(CustomerType.REGULAR);
+            HotelReservation.DefiningAdditionRepository(CustomerType.REWARD);
             HotelReservation.DisplayRecordsInDictionary();
-            /// Getting the check-in date or the start date
-            Console.WriteLine("Enter the check in date this format DD-MM-YYYY.");
-            string startDate = Console.ReadLine();
-            DateTime checkInDate = DateTime.Parse(startDate);
-            /// Getting the check-in date or the start date
-            Console.WriteLine("Enter the check out date in this format DD-MM-YYYY.");
-            string endDate = Console.ReadLine();
-            DateTime checkOutDate = DateTime.Parse(endDate);
-            ///UC-7 Finds the best rated hotel.
-            HotelReservation hotelReservation = new HotelReservation();
-            hotelReservation.FindBestRatedHotel(checkInDate, checkOutDate);
+            Console.WriteLine("Have you upgraded from the regular customer then enter yes.");
+            string choice = Console.ReadLine().ToLower();
+            if (choice == "yes")
+            {
+                FunctionForCustomerType(2);
+            }
+            else
+            {
+                FunctionForCustomerType(1);
+            }
             Console.ReadKey();
         }
     }
