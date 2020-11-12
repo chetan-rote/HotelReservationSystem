@@ -39,7 +39,7 @@ namespace HotelReservationSystem
             }
         }
         /// <summary>
-        /// UC2 
+        /// UC2 & 4
         /// Finds the cheapest hotel for the date range.
         /// </summary>
         public static void FindCheapestHotel()
@@ -59,7 +59,24 @@ namespace HotelReservationSystem
                 /// Iterating over the online hotel records to store the total expense and hotel name
                 foreach (var records in onlineHotelRecords)
                 {
-                    int totalExpense = records.Value.weekdayRate * noOfDays;
+                    int totalExpense = 0;
+                    DateTime currentDate = checkInDate;
+                    while (currentDate <= checkoutDate)
+                    {
+                        /// Checking the type of the date - Weekend (Saturday or Sunday)
+                        if (currentDate.Equals("Saturday") || currentDate.Equals("Sunday"))
+                        {
+                            /// Adding the weekend expense in the total expense
+                            totalExpense += records.Value.weekendRate;
+                        }
+                        else
+                        {
+                            /// Adding the weekday expense in the total expense
+                            totalExpense += records.Value.weekdayRate;
+                        }
+                        /// Moving to the next day to increment the current date
+                        currentDate = currentDate.AddDays(1);
+                    }
                     rateRecords.Add(records.Value.hotelName, totalExpense);
                 }
                 /// Executing the order by total expense and fetching the minimum value of rate
@@ -67,7 +84,7 @@ namespace HotelReservationSystem
                 /// Returning the custom sized null exception for no entry of the rate value
                 if (keyValueForSorted.Key == null)
                     throw new HotelReservationCustomException(HotelReservationCustomException.ExceptionType.RATE_ENTRY_NOT_EXIST, "There was no total Expense entry for the cheapest hotel.");
-                Console.WriteLine("Cheapest Hotel: {0}, Cheapest Rate: {1}", keyValueForSorted.Key, keyValueForSorted.Value);
+                Console.WriteLine("Cheapest Hotel - {0}, Cheapest Rate - {1}", keyValueForSorted.Key, keyValueForSorted.Value);
             }
             catch (HotelReservationCustomException e)
             {
