@@ -12,6 +12,23 @@ namespace HotelReservationSystem
         public static Dictionary<string, HotelDetails> recordsForRegularCutomers = new Dictionary<string, HotelDetails>();
         /// Dictionary to store the record of the hotel and the hotel details for reward customers.
         public static Dictionary<string, HotelDetails> recordsForRewardCutomers = new Dictionary<string, HotelDetails>();
+        public static DateTime checkInDate;
+        public static DateTime checkOutDate;
+        /// <summary>
+        /// Gets the check in and check out date.
+        /// </summary>
+        public static void GetCheckInCheckOutDate()
+        {
+            Console.WriteLine("Enter the check in date in this DD-MM-YYYY");
+            checkInDate = DateTime.Parse(Console.ReadLine());           
+            Console.WriteLine("Enter the check out date in this DD-MM-YYYY");
+            checkOutDate = DateTime.Parse(Console.ReadLine());
+        }
+        /// <summary>
+        /// UC8
+        /// Method to add the data to the multiple customer types
+        /// </summary>
+        /// <param name="customerType"></param>
         public static void DefiningAdditionRepository(CustomerType customerType)
         {
             switch (customerType)
@@ -33,6 +50,13 @@ namespace HotelReservationSystem
                     throw new HotelReservationCustomException(HotelReservationCustomException.ExceptionType.INVALID_CUSTOMER_TYPE, "Does not support this customer type");
             }
         }
+        /// <summary>
+        /// UC1 -- Adding the Hotel Record to the online hotel record dictionary
+        /// </summary>
+        /// <param name="hotelName"></param>
+        /// <param name="weekdayRate"></param>
+        /// <param name="weekendRate"></param>
+        /// <param name="type"></param>
         public static void AddHotelRecords(string hotelName, int weekdayRate, int weekendRate, int rating, int type)
         {
             if (type == 1)
@@ -78,17 +102,14 @@ namespace HotelReservationSystem
                 Console.WriteLine($"Hotel Name = {records.Key}, WeekDay Rate Per Day = {records.Value.weekdayRate}, WeekDay Rate Per Day = {records.Value.weekendRate}, Ratings = {records.Value.rating}\n");
             }
         }
-
+        /// <summary>
+        /// Calculates the total rate for each hotel.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public static Dictionary<string, int> CalculateTotalRateForEachHotel(int type)
         {
-            /// Getting the check-in date or the start date
-            Console.WriteLine("Enter the check in date this format DD-MM-YYYY.");
-            string startDate = Console.ReadLine();
-            DateTime checkInDate = DateTime.Parse(startDate);
-            /// Getting the check-in date or the start date
-            Console.WriteLine("Enter the check out date in this format DD-MM-YYYY.");
-            string endDate = Console.ReadLine();
-            DateTime checkOutDate = DateTime.Parse(endDate);
+            GetCheckInCheckOutDate();
             /// Dictionary to store the calculated rate for each hotel.
             Dictionary<string, int> rateRecords = new Dictionary<string, int>();
             /// Computing the number ofdays of stay requested by the customer
@@ -118,7 +139,12 @@ namespace HotelReservationSystem
             }
             return rateRecords;
         }
-
+        /// <summary>
+        /// UC2
+        /// Finds the cheapest hotel.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <exception cref="HotelReservationCustomException">There was no total Expense entry for the cheapest hotel.</exception>
         public static void FindCheapestHotel(int type)
         {
             /// Catching the exception of null value to the sorted list
@@ -139,9 +165,8 @@ namespace HotelReservationSystem
             }
         }
         /// <summary>
-        /// UC6 -- Find cheapest best rated hotel for the customer date range of travel
-        /// Logic -- Consider the cheapest if it is high in rating and low in cost
-        /// Else consider the second next in cost reduction
+        /// UC6
+        /// Find cheapest best rated hotel for given date range.
         /// </summary>
         /// <returns></returns>
         public static void FindCheapestBestRatedHotels(int type)
@@ -187,26 +212,33 @@ namespace HotelReservationSystem
         /// <returns></returns
         public static void FindBestRatedHotel(int type)
         {
-            ///To store calculated rates for hotels.
-            Dictionary<string, int> rateRecords = new Dictionary<string, int>();
-            rateRecords = CalculateTotalRateForEachHotel(type);
-            /// Dictionary to store the rating Records and name of dictionary
-            Dictionary<string, int> ratingRecords = new Dictionary<string, int>();
-            /// Adding the rating and hotel name to the dictionary
-            foreach (var records in ((type == 1) ? recordsForRegularCutomers : recordsForRewardCutomers))
+            try
             {
-                ratingRecords.Add(records.Value.hotelName, records.Value.rating);
-            }
-            /// Sorting the dictionary element by the rating in descending order.
-            var keyValueForSortedRating = ratingRecords.OrderByDescending(sortedValuePair => sortedValuePair.Value).First();
-            ///Iterating the rating dictionary.
-            foreach (var sortByRate in rateRecords)
-            {
-                /// Condition check for the most suitable hotel according to  the use cases
-                if (sortByRate.Key == keyValueForSortedRating.Key)
+                ///To store calculated rates for hotels.
+                Dictionary<string, int> rateRecords = new Dictionary<string, int>();
+                rateRecords = CalculateTotalRateForEachHotel(type);
+                /// Dictionary to store the rating Records and name of dictionary
+                Dictionary<string, int> ratingRecords = new Dictionary<string, int>();
+                /// Adding the rating and hotel name to the dictionary
+                foreach (var records in ((type == 1) ? recordsForRegularCutomers : recordsForRewardCutomers))
                 {
-                    Console.WriteLine("Best Rated hotel is: {0} with Rates: {1} and Ratings: {2}.", sortByRate.Key, sortByRate.Value, keyValueForSortedRating.Value);
+                    ratingRecords.Add(records.Value.hotelName, records.Value.rating);
                 }
+                /// Sorting the dictionary element by the rating in descending order.
+                var keyValueForSortedRating = ratingRecords.OrderByDescending(sortedValuePair => sortedValuePair.Value).First();
+                ///Iterating the rating dictionary.
+                foreach (var sortByRate in rateRecords)
+                {
+                    /// Condition check for the most suitable hotel according to  the use cases
+                    if (sortByRate.Key == keyValueForSortedRating.Key)
+                    {
+                        Console.WriteLine("Best Rated hotel is: {0} with Rates: {1} and Ratings: {2}.", sortByRate.Key, sortByRate.Value, keyValueForSortedRating.Value);
+                    }
+                }
+            }
+            catch (HotelReservationCustomException e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
     }
