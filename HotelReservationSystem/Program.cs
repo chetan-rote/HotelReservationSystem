@@ -20,12 +20,16 @@ namespace HotelReservationSystem
         static void Main(string[] args)
         {
             Console.WriteLine("Hello Welcome to Hotel Reservation System\n");
-            /// UC1 --Adding the hotels name and rates.
+            /// UC1 
+            /// Adding the hotels name and rates.
             HotelReservation.AddHotelRecords("Lakewood", 110);
             HotelReservation.AddHotelRecords("Bridgewood", 150);
             HotelReservation.AddHotelRecords("Ridgewood", 220);
             /// Display the record in the hotel record dictionary.
             HotelReservation.DisplayRecordsInDictionary();
+            /// UC 2
+            /// Print the hotel with the cheapest rates.
+            HotelReservation.FindCheapestHotel();
             Console.ReadKey();
         }
     }
