@@ -10,6 +10,7 @@ namespace HotelReservationSystem
     {
         /// Dictionary to stores the record of the hotel and the totalExpense of the hotel.
         public static Dictionary<string, HotelDetails> onlineHotelRecords = new Dictionary<string, HotelDetails>();
+        
 
         /// <summary>
         /// UC1
@@ -43,6 +44,39 @@ namespace HotelReservationSystem
                     $" Ratings = {records.Value.rating}\n");
             }
         }
+
+        public static Dictionary<string, int> CalculateTotalRateForEachHotel(DateTime checkInDate, DateTime checkOutDate)
+        {
+            /// Dictionary to store the calculated rate for each hotel.
+            Dictionary<string, int> rateRecords = new Dictionary<string, int>();
+            /// Computing the number ofdays of stay requested by the customer
+            int noOfDaysOfStay = (checkOutDate - checkInDate).Days + 1;
+            /// Iterating over the online hotel records to store the total expense and hotel name
+            foreach (var records in onlineHotelRecords)
+            {
+                int totalExpense = 0;
+                DateTime currentDate = checkInDate;
+                while (currentDate <= checkOutDate)
+                {
+                    /// Checking the type of the date - Weekend (Saturday or Sunday)
+                    if (currentDate.Equals("Saturday") || currentDate.Equals("Sunday"))
+                    {
+                        /// Adding the weekend expense in the total expense
+                        totalExpense += records.Value.weekendRate;
+                    }
+                    else
+                    {
+                        /// Adding the weekday expense in the total expense
+                        totalExpense += records.Value.weekdayRate;
+                    }
+                    /// Moving to the next day to increment the current date
+                    currentDate = currentDate.AddDays(1);
+                }
+                rateRecords.Add(records.Value.hotelName, totalExpense);
+            }
+            return rateRecords;
+        }
+
         /// <summary>
         /// UC4 & 6
         /// Find cheapest best rated hotel for the customer in date range.
@@ -115,6 +149,35 @@ namespace HotelReservationSystem
                 Console.WriteLine(e.Message);
             }            
             return new Tuple<string, int, int>("", 0, 0);
+        }
+        /// <summary>
+        /// Finds the best rated hotel.
+        /// </summary>
+        /// <param name="checkInDate">The check in date.</param>
+        /// <param name="checkOutDate">The check out date.</param>
+        public void FindBestRatedHotel(DateTime checkInDate, DateTime checkOutDate)
+        {
+            ///To store calculated rates for hotels.
+            Dictionary<string, int> rateRecords = new Dictionary<string, int>();
+            rateRecords = CalculateTotalRateForEachHotel(checkInDate, checkOutDate);
+            /// Dictionary to store the rating Records and name of dictionary
+            Dictionary<string, int> ratingRecords = new Dictionary<string, int>();
+            /// Adding the rating and hotel name to the dictionary
+            foreach (var records in onlineHotelRecords)
+            {
+                ratingRecords.Add(records.Value.hotelName, records.Value.rating);
+            }
+            /// Sorting the dictionary element by the rating in descending order.
+            var keyValueForSortedRating = ratingRecords.OrderByDescending(sortedValuePair => sortedValuePair.Value).First();
+            ///Iterating the rating dictionary.
+            foreach (var sortByRate in rateRecords)
+            {
+                /// Condition check for the most suitable hotel according to  the use cases
+                if (sortByRate.Key == keyValueForSortedRating.Key)
+                {
+                    Console.WriteLine("Best Rated hotel is: {0} with Rates: {1} and Ratings: {2}.", sortByRate.Key, sortByRate.Value, keyValueForSortedRating.Value);                   
+                }
+            }
         }
     }
 }
