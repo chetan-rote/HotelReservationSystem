@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using LanguageExt;
 
 namespace HotelReservationSystem
@@ -15,58 +14,15 @@ namespace HotelReservationSystem
         public static Dictionary<string, HotelDetails> recordsForRewardCutomers = new Dictionary<string, HotelDetails>();
         public static DateTime checkInDate;
         public static DateTime checkOutDate;
-        public static string DATE_REGEX_VALIDATOR = @"^([0-9]{2})([,][0-9]{2})([,][0-9]{4})$";
-        /// <summary>
-        /// Determines whether the specified date is valid or not.
-        /// </summary>
-        /// <param name="date">The date.</param>
-        /// <returns>
-        ///   <c>true</c> if [is valid date] [the specified date]; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsValidDate(string date)
-        {
-            return Regex.IsMatch(date, DATE_REGEX_VALIDATOR);
-        }
         /// <summary>
         /// Gets the check in and check out date.
         /// </summary>
         public static void GetCheckInCheckOutDate()
         {
             Console.WriteLine("Enter the check in date in this DD-MM-YYYY");
-            string startDate = Console.ReadLine();
-            try
-            {
-                if (IsValidDate(startDate))
-                {
-                    checkInDate = DateTime.Parse(startDate);
-                }
-                else
-                {
-                    throw new HotelReservationCustomException(HotelReservationCustomException.ExceptionType.INVALID_DATES, "Entered date is invalid");
-                }
-            }
-            catch (HotelReservationCustomException message)
-            {
-                Console.WriteLine(message.Message);
-            }
-                       
+            checkInDate = DateTime.Parse(Console.ReadLine());           
             Console.WriteLine("Enter the check out date in this DD-MM-YYYY");
-            string endDate = Console.ReadLine();
-            try
-            {
-                if (IsValidDate(endDate))
-                {
-                    checkOutDate = DateTime.Parse(endDate);
-                }
-                else
-                {
-                    throw new HotelReservationCustomException(HotelReservationCustomException.ExceptionType.INVALID_DATES, "Entered date is invalid");
-                }
-            }
-            catch (HotelReservationCustomException message)
-            {
-                Console.WriteLine(message.Message);
-            }
+            checkOutDate = DateTime.Parse(Console.ReadLine());
         }
         /// <summary>
         /// UC8
@@ -234,12 +190,12 @@ namespace HotelReservationSystem
                 /// Getting the length of the sorted dictionary for rating
                 int length = (keyValueForSortedRating.Length() / 2);
                 /// Deciding the median amply rated hotel for the user
-                var rating = keyValueForSortedRating.ElementAt(length);                
+                var ampleRating = keyValueForSortedRating.ElementAt(length);                
                 /// Matching for rating and cheapest hotel too
                 foreach (var sortByRate in keyValueForSortedByRate)
                 {
                     /// Condition check for the most suitable hotel according to  the use cases
-                    if (sortByRate.Key == rating.Key)
+                    if (sortByRate.Key == ampleRating.Key)
                     {
                         Console.WriteLine("Cheapest Hotel is: {0} with Rates: {1} and Ratings: {2}.", sortByRate.Key, sortByRate.Value);
                     }
