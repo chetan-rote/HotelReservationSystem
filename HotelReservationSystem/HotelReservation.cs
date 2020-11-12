@@ -15,7 +15,7 @@ namespace HotelReservationSystem
         /// </summary>
         /// <param name="hotelName">Name of the hotel.</param>
         /// <param name="ratePerDay">The rate per day.</param>
-        public static void AddHotelRecords(string hotelName, int weekdayRate, int weekendRate)
+        public static void AddHotelRecords(string hotelName, int weekdayRate, int weekendRate, int rating)
         {
             if (onlineHotelRecords.ContainsKey(hotelName))
             {
@@ -23,7 +23,7 @@ namespace HotelReservationSystem
             }
             else
             {
-                HotelDetails newHotel = new HotelDetails(hotelName, weekdayRate, weekendRate);
+                HotelDetails newHotel = new HotelDetails(hotelName, weekdayRate, weekendRate, rating);
                 onlineHotelRecords.Add(hotelName, newHotel);
             }
         }
@@ -35,7 +35,8 @@ namespace HotelReservationSystem
             foreach (var records in onlineHotelRecords)
             {
                 Console.WriteLine($"Hotel Name = {records.Key}, WeekDay Rate Per Day =" +
-                    $" {records.Value.weekdayRate}, Weekend Rate Per Day = {records.Value.weekendRate}\n");
+                    $" {records.Value.weekdayRate}, Weekend Rate Per Day = {records.Value.weekendRate}," +
+                    $" Ratings = {records.Value.rating}\n");
             }
         }
         /// <summary>
