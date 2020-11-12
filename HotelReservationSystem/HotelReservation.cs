@@ -15,7 +15,7 @@ namespace HotelReservationSystem
         /// </summary>
         /// <param name="hotelName">Name of the hotel.</param>
         /// <param name="ratePerDay">The rate per day.</param>
-        public static void AddHotelRecords(string hotelName, int ratePerDay)
+        public static void AddHotelRecords(string hotelName, int weekdayRate, int weekendRate)
         {
             if (onlineHotelRecords.ContainsKey(hotelName))
             {
@@ -23,7 +23,7 @@ namespace HotelReservationSystem
             }
             else
             {
-                HotelDetails newHotel = new HotelDetails(hotelName, ratePerDay);
+                HotelDetails newHotel = new HotelDetails(hotelName, weekdayRate, weekendRate);
                 onlineHotelRecords.Add(hotelName, newHotel);
             }
         }
@@ -34,7 +34,8 @@ namespace HotelReservationSystem
         {
             foreach (var records in onlineHotelRecords)
             {
-                Console.WriteLine($"Hotel Name = {records.Key}, Rate Per Day = {records.Value.ratePerDay}\n");
+                Console.WriteLine($"Hotel Name = {records.Key}, WeekDay Rate Per Day =" +
+                    $" {records.Value.weekdayRate}, Weekend Rate Per Day = {records.Value.weekendRate}\n");
             }
         }
         /// <summary>
@@ -58,7 +59,7 @@ namespace HotelReservationSystem
                 /// Iterating over the online hotel records to store the total expense and hotel name
                 foreach (var records in onlineHotelRecords)
                 {
-                    int totalExpense = records.Value.ratePerDay * noOfDays;
+                    int totalExpense = records.Value.weekdayRate * noOfDays;
                     rateRecords.Add(records.Value.hotelName, totalExpense);
                 }
                 /// Executing the order by total expense and fetching the minimum value of rate
@@ -66,7 +67,7 @@ namespace HotelReservationSystem
                 /// Returning the custom sized null exception for no entry of the rate value
                 if (keyValueForSorted.Key == null)
                     throw new HotelReservationCustomException(HotelReservationCustomException.ExceptionType.RATE_ENTRY_NOT_EXIST, "There was no total Expense entry for the cheapest hotel.");
-                Console.WriteLine("Cheapest Hotel - {0}, Cheapest Rate - {1}", keyValueForSorted.Key, keyValueForSorted.Value);
+                Console.WriteLine("Cheapest Hotel: {0}, Cheapest Rate: {1}", keyValueForSorted.Key, keyValueForSorted.Value);
             }
             catch (HotelReservationCustomException e)
             {
