@@ -8,7 +8,6 @@ namespace HotelReservationSystem
     {
         ///Variables.
         public string hotelName;
-        public int ratePerDay;
         /// UC3
         /// Differentiating between the weekday and weekend rates.
         public int weekdayRate;
