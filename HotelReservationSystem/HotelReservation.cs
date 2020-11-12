@@ -32,6 +32,7 @@ namespace HotelReservationSystem
         /// </summary>
         public static void GetCheckInCheckOutDate()
         {
+            ///Getting check in date.
             Console.WriteLine("Enter the check in date in this DD-MM-YYYY");
             string startDate = Console.ReadLine();
             try
@@ -49,7 +50,7 @@ namespace HotelReservationSystem
             {
                 Console.WriteLine(message.Message);
             }
-                       
+            ///Getting check out date.
             Console.WriteLine("Enter the check out date in this DD-MM-YYYY");
             string endDate = Console.ReadLine();
             try
