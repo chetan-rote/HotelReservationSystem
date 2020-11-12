@@ -22,9 +22,9 @@ namespace HotelReservationSystem
             Console.WriteLine("Hello Welcome to Hotel Reservation System\n");
             /// UC1 
             /// Adding the hotels name and rates.
-            HotelReservation.AddHotelRecords("Lakewood", 110);
-            HotelReservation.AddHotelRecords("Bridgewood", 150);
-            HotelReservation.AddHotelRecords("Ridgewood", 220);
+            HotelReservation.AddHotelRecords("Lakewood", 110, 90);
+            HotelReservation.AddHotelRecords("Bridgewood", 150, 50);
+            HotelReservation.AddHotelRecords("Ridgewood", 220, 150);
             /// Display the record in the hotel record dictionary.
             HotelReservation.DisplayRecordsInDictionary();
             /// UC 2
